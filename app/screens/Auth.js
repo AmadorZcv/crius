@@ -134,6 +134,10 @@ export default class Auth extends PureComponent {
       .then(response => console.log(response))
       .catch(error => this.setErrorsLogin(error));
   };
+  buttonTitleText() {
+    const {isLogin} = this.state;
+    return isLogin ? 'Login' : 'Register';
+  }
   render() {
     const {imageFlex, isLogin} = this.state;
     const onConfirmPress = isLogin ? this.onLoginPress : this.onRegisterPress;
@@ -166,7 +170,7 @@ export default class Auth extends PureComponent {
           </View>
           {this.renderForm()}
           <Button
-            title={'Login'}
+            title={this.buttonTitleText()}
             onPress={onConfirmPress}
             titleStyle={[styles.loginTitle, !isLogin && styles.registerTitle]}
           />
