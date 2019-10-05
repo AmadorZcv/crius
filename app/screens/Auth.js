@@ -90,69 +90,88 @@ export default class Auth extends PureComponent {
       .catch(error => console.log(error));
   };
   render() {
+    const {imageFlex, isLogin} = this.state;
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          backgroundColor: 'black',
-        }}>
-        <Animated.View
-          style={{
-            justifyContent: 'center',
-            flex: this.state.imageFlex,
-            padding: 5,
-          }}>
+      <View style={styles.container}>
+        <Animated.View style={[styles.imageContainer, {flex: imageFlex}]}>
           <Animated.Image
             source={require('../img/logo.png')}
-            style={{
-              width: this.state.logoWidth,
-              height: this.state.logoHeight,
-              alignSelf: 'flex-start',
-            }}
+            style={[
+              styles.imageStyle,
+              {
+                width: this.state.logoWidth,
+                height: this.state.logoHeight,
+              },
+            ]}
           />
         </Animated.View>
-        <View
-          style={{
-            flex: 4,
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              width: '80%',
-
-              flexDirection: 'row',
-            }}>
+        <View style={styles.formContainer}>
+          <View style={styles.buttonContainer}>
             <TouchableOpacity
-              style={{flex: 1, padding: 5, backgroundColor: '#e91e63'}}
+              style={[styles.buttonStyle, styles.pinkButton]}
               onPress={this.onLoginFormPress}>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: 'white',
-                }}>
-                Login
-              </Text>
+              <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{flex: 1, padding: 5, backgroundColor: '#17086e'}}
+              style={[styles.buttonStyle, styles.blueButton]}
               onPress={this.onRegisterFormPress}>
-              <Text
-                style={{
-                  color: 'white',
-                  textAlign: 'center',
-                }}>
-                Register
-              </Text>
+              <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
           </View>
           {this.renderForm()}
-          <Button title={'Login'} onPress={this.onRegisterPress} />
+          <Button
+            title={'Login'}
+            onPress={this.onRegisterPress}
+            titleStyle={[styles.loginTitle, !isLogin && styles.registerTitle]}
+          />
         </View>
       </View>
     );
   }
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  imageContainer: {
+    justifyContent: 'center',
+
+    padding: 5,
+  },
+  imageStyle: {
+    alignSelf: 'flex-start',
+  },
+  formContainer: {
+    flex: 4,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    width: '80%',
+    flexDirection: 'row',
+  },
+  buttonStyle: {
+    flex: 1,
+    padding: 5,
+  },
+  pinkButton: {
+    backgroundColor: '#e91e63',
+  },
+  blueButton: {
+    backgroundColor: '#17086e',
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  registerTitle: {
+    color: '#17086e',
+  },
+  loginTitle: {
+    color: '#e91e63',
+  },
+});
