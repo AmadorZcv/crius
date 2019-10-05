@@ -32,17 +32,17 @@ export default class Auth extends PureComponent {
     Animated.sequence([
       Animated.parallel([
         Animated.timing(this.state.logoHeight, {
-          toValue: 100,
+          toValue: 200,
           easing: Easing.back(),
           duration: 600,
         }),
         Animated.timing(this.state.logoWidth, {
-          toValue: 120,
+          toValue: 240,
           easing: Easing.back(),
           duration: 600,
         }),
         Animated.timing(this.state.imageFlex, {
-          toValue: 1,
+          toValue: 2,
           easing: Easing.back(),
           duration: 600,
         }),
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     justifyContent: 'center',
-
+    alignItems: 'center',
     padding: 5,
   },
   imageStyle: {

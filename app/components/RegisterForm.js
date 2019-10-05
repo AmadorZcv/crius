@@ -31,13 +31,6 @@ export default class RegisterForm extends PureComponent {
           Icon={() => <Icon name="email" size={24} color="black" />}
           labelStyle={styles.labelStyle}
         />
-        <FormInput
-          label={'Password Confirmatiom'}
-          placeholder={'*******'}
-          secure
-          Icon={() => <Icon name="lock" size={24} color="black" />}
-          labelStyle={styles.labelStyle}
-        />
       </View>
     );
   }
