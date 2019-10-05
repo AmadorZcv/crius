@@ -29,4 +29,11 @@ export const theme = {
       color: '#e91e63',
     },
   },
+  Header: {
+    containerStyle: {
+      height: 40,
+      paddingTop: 0,
+      backgroundColor: '#e91e63',
+    },
+  },
 };

@@ -7,6 +7,7 @@ import Router from './app/config/Router';
 import AsyncStorage from '@react-native-community/async-storage';
 import {setIsLogged} from './app/redux/user/actions';
 import api from './app/config/api';
+import {StatusBar} from 'react-native';
 
 export default class App extends Component {
   constructor(props) {
@@ -42,6 +43,7 @@ export default class App extends Component {
     return (
       <Provider store={store}>
         <ThemeProvider theme={theme}>
+          <StatusBar backgroundColor="#e91e63" barStyle="light-content" />
           <Router />
         </ThemeProvider>
       </Provider>
