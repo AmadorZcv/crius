@@ -1,5 +1,6 @@
-import { combineReducers } from 'redux'
-import home from './home/reducer';
+import {combineReducers} from 'redux';
+
+import user from './user/reducer';
 export default combineReducers({
-    home
-})
+  user,
+});

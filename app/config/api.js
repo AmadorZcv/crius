@@ -1,15 +1,15 @@
-import axios from "axios";
-const hostUrl = "http://10.11.81.17:4000/";
+import axios from 'axios';
+const hostUrl = 'http://192.168.0.102:4000/';
 
 const defaultOptions = {
   baseURL: hostUrl,
   headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    dataType: "json"
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    dataType: 'json',
   },
   transformResponse: [
-    function (data) {
+    function(data) {
       // Transformando pro formato antigo da api
       // Alguns erros não podem ser formatados para json,nesse caso simplesmente retornamos data
       try {
@@ -21,15 +21,14 @@ const defaultOptions = {
       } catch (error) {
         return data;
       }
-    }
-  ]
+    },
+  ],
 };
 
-const Api = axios.create(defaultOptions);
-Api.interceptors.request.use(function (config) {
-  console.log("Request headers", config.headers);
+const api = axios.create(defaultOptions);
+api.interceptors.request.use(function(config) {
   if (__DEV__) {
-    console.log("URL  é", config.url);
+    console.log('URL  é', config.url);
     // console.log("URL:", config.url, hasToken);
   }
   return config;

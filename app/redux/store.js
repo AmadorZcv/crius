@@ -1,6 +1,6 @@
-import { createStore, applyMiddleware,compose } from "redux";
+import {createStore, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
-import reducers from "./reducers";
+import reducers from './reducers';
 
 // Todos os middlewares vão juntos
 const middleWare = [];

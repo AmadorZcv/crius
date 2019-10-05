@@ -11,6 +11,8 @@ import FormInput from '../components/FormInput';
 import {Image, Icon, Button} from 'react-native-elements';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import api from '../config/api';
+import {register} from '../config/apiLinks';
 
 export default class Auth extends PureComponent {
   constructor(props) {
@@ -81,6 +83,12 @@ export default class Auth extends PureComponent {
     this.setState({isLogin: false});
     this.minimizeLogo();
   };
+  onRegisterPress = () => {
+    api
+      .post(register, {user: {email: ''}})
+      .then(response => console.log(response))
+      .catch(error => console.log(error));
+  };
   render() {
     return (
       <View
@@ -142,7 +150,7 @@ export default class Auth extends PureComponent {
             </TouchableOpacity>
           </View>
           {this.renderForm()}
-          <Button title={'Login'} />
+          <Button title={'Login'} onPress={this.onRegisterPress} />
         </View>
       </View>
     );
