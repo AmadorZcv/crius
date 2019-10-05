@@ -7,9 +7,21 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import Home from '../screens/Home';
 import {Icon} from 'react-native-elements';
 import {Color, TextStyle} from '../styles';
+import Auth from '../screens/Auth';
 
 const HomeStack = createStackNavigator(
   {
+    Auth: {
+      screen: Auth,
+      navigationOptions: ({navigation}) => {
+        return {
+          headerTitle: 'Home',
+          headerLeft: null,
+          headerRight: null,
+          header: null,
+        };
+      },
+    },
     Home: {
       screen: Home,
       navigationOptions: ({navigation}) => {
@@ -72,4 +84,4 @@ const TabNavigator = createBottomTabNavigator(
   },
 );
 
-export default createAppContainer(TabNavigator);
+export default createAppContainer(HomeStack);
