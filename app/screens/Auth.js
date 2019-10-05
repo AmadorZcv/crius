@@ -12,7 +12,7 @@ import {Button} from 'react-native-elements';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import api from '../config/api';
-import {register} from '../config/apiLinks';
+import {register, sign_in} from '../config/apiLinks';
 
 export default class Auth extends PureComponent {
   constructor(props) {
@@ -22,6 +22,10 @@ export default class Auth extends PureComponent {
       logoWidth: new Animated.Value(325),
       logoHeight: new Animated.Value(270),
       imageFlex: new Animated.Value(4),
+      emailLogin: '',
+      passwordLogin: '',
+      emailLoginError: '',
+      passwordLoginError: '',
     };
   }
   minimizeLogo = () => {
@@ -66,10 +70,40 @@ export default class Auth extends PureComponent {
       ]),
     ]).start();
   };
+  onChangeEmailLogin = emailLogin => {
+    this.setState({emailLogin});
+  };
+  onChangePasswordLogin = passwordLogin => {
+    this.setState({passwordLogin});
+  };
+  setErrorsLogin = error => {
+    if (error.response) {
+      if (error.response.status === 401) {
+        const {data} = error.response;
+        if (data === 'invalid user-identifier') {
+          this.setState({emailLoginError: 'Invalid Email'});
+        } else {
+          this.setState({passwordLoginError: 'Invalid Password'});
+        }
+      }
+    } else {
+      this.setState({passwordLoginError: 'Erro'});
+    }
+  };
+  cleanErrorsLogin = () => {
+    this.setState({passwordLoginError: '', emailLoginError: ''});
+  };
   renderForm = () => {
-    const {isLogin} = this.state;
+    const {isLogin, emailLoginError, passwordLoginError} = this.state;
     if (isLogin) {
-      return <LoginForm />;
+      return (
+        <LoginForm
+          onChangeEmail={this.onChangeEmailLogin}
+          onChangePassword={this.onChangePasswordLogin}
+          passwordError={passwordLoginError}
+          emailError={emailLoginError}
+        />
+      );
     }
     return <RegisterForm />;
   };
@@ -87,10 +121,22 @@ export default class Auth extends PureComponent {
     api
       .post(register, {user: {email: ''}})
       .then(response => console.log(response))
-      .catch(error => console.log(error));
+      .catch(error => this.setErrorsLogin(error));
+  };
+  onLoginPress = () => {
+    const {emailLogin, passwordLogin} = this.state;
+    this.cleanErrorsLogin();
+    api
+      .post(sign_in, {
+        email: emailLogin,
+        password: passwordLogin,
+      })
+      .then(response => console.log(response))
+      .catch(error => this.setErrorsLogin(error));
   };
   render() {
     const {imageFlex, isLogin} = this.state;
+    const onConfirmPress = isLogin ? this.onLoginPress : this.onRegisterPress;
     return (
       <View style={styles.container}>
         <Animated.View style={[styles.imageContainer, {flex: imageFlex}]}>
@@ -121,7 +167,7 @@ export default class Auth extends PureComponent {
           {this.renderForm()}
           <Button
             title={'Login'}
-            onPress={this.onRegisterPress}
+            onPress={onConfirmPress}
             titleStyle={[styles.loginTitle, !isLogin && styles.registerTitle]}
           />
         </View>

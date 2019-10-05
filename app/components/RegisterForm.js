@@ -27,6 +27,7 @@ export default class RegisterForm extends PureComponent {
           placeholder={'youremail@email.com'}
           Icon={() => <Icon name="email" size={24} color="black" />}
           labelStyle={styles.labelStyle}
+          keyboardType={'email-address'}
         />
         <FormInput
           label={'Nickname'}
