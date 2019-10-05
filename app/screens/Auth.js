@@ -7,14 +7,16 @@ import {
   Animated,
   Easing,
 } from 'react-native';
+import {connect} from 'react-redux';
 
 import {Button} from 'react-native-elements';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import api from '../config/api';
 import {register, sign_in} from '../config/apiLinks';
+import {signIn} from '../redux/user/actions';
 
-export default class Auth extends PureComponent {
+class Auth extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -125,13 +127,14 @@ export default class Auth extends PureComponent {
   };
   onLoginPress = () => {
     const {emailLogin, passwordLogin} = this.state;
+    const {signIn} = this.props;
     this.cleanErrorsLogin();
     api
       .post(sign_in, {
         email: emailLogin,
         password: passwordLogin,
       })
-      .then(response => console.log(response))
+      .then(response => signIn(response.data.token))
       .catch(error => this.setErrorsLogin(error));
   };
   buttonTitleText() {
@@ -179,6 +182,16 @@ export default class Auth extends PureComponent {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => ({
+  signIn: token => {
+    dispatch(signIn(token));
+  },
+});
+export default connect(
+  null,
+  mapDispatchToProps,
+)(Auth);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
