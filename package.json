@@ -1,0 +1,79 @@
+{
+  "name": "reactnative",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "moment": "^2.24.0",
+    "react": "16.9.0",
+    "react-native": "0.61.2",
+    "react-native-elements": "^1.2.5",
+    "react-native-gesture-handler": "^1.4.1",
+    "react-native-reanimated": "^1.3.0",
+    "react-native-screens": "^1.0.0-alpha.23",
+    "react-native-vector-icons": "^6.6.0",
+    "react-navigation": "^4.0.10",
+    "react-navigation-stack": "^1.9.3",
+    "react-navigation-tabs": "^2.5.5",
+    "react-redux": "^7.1.1",
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-jest": "^24.9.0",
+    "detox": "^14.4.0",
+    "eslint": "^6.5.1",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.56.0",
+    "mocha": "^6.2.1",
+    "react-test-renderer": "16.9.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "detox": {
+    "test-runner": "mocha",
+    "specs": "e2e",
+    "runner-config": "e2e/mocha.opts",
+    "configurations": {
+      "ios.sim": {
+        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/reactnative.app",
+        "build": "xcodebuild -workspace ios/reactnative.xcworkspace  -scheme reactnative -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
+        "type": "ios.simulator",
+        "name": "iPhone 11 Pro Max"
+      },
+      "android": {
+        "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+        "build": "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && cd ..",
+        "type": "android.emulator",
+        "name": "Pixel_2_XL_API_28"
+      },
+      "android.release": {
+        "binaryPath": "android/app/build/outputs/apk/release/app-release.apk",
+        "build": "cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && cd ..",
+        "type": "android.emulator",
+        "name": "Pixel_2_XL_API_28"
+      },
+      "android.device": {
+        "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+        "build": "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && cd ..",
+        "type": "android.attached",
+        "name": "LMX410I7SCTSJVZ94S",
+        "session": {
+          "server": "ws://localhost:8089",
+          "sessionId": "YourProjectSessionId"
+        }
+      }
+    }
+  }
+}
