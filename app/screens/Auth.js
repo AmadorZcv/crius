@@ -7,8 +7,8 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import FormInput from '../components/FormInput';
-import {Image, Icon, Button} from 'react-native-elements';
+
+import {Button} from 'react-native-elements';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import api from '../config/api';
