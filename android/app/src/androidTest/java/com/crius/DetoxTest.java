@@ -1,4 +1,4 @@
-package com.reactnative;
+package com.crius;
 
 import com.wix.detox.Detox;
 

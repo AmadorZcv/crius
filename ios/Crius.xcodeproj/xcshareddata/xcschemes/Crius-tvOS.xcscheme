@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "reactnative-tvOS.app"
-               BlueprintName = "reactnative-tvOS"
-               ReferencedContainer = "container:reactnative.xcodeproj">
+               BuildableName = "Crius-tvOS.app"
+               BlueprintName = "Crius-tvOS"
+               ReferencedContainer = "container:Crius.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "reactnative-tvOSTests.xctest"
-               BlueprintName = "reactnative-tvOSTests"
-               ReferencedContainer = "container:reactnative.xcodeproj">
+               BuildableName = "Crius-tvOSTests.xctest"
+               BlueprintName = "Crius-tvOSTests"
+               ReferencedContainer = "container:Crius.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "reactnative-tvOSTests.xctest"
-               BlueprintName = "reactnative-tvOSTests"
-               ReferencedContainer = "container:reactnative.xcodeproj">
+               BuildableName = "Crius-tvOSTests.xctest"
+               BlueprintName = "Crius-tvOSTests"
+               ReferencedContainer = "container:Crius.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "reactnative-tvOS.app"
-            BlueprintName = "reactnative-tvOS"
-            ReferencedContainer = "container:reactnative.xcodeproj">
+            BuildableName = "Crius-tvOS.app"
+            BlueprintName = "Crius-tvOS"
+            ReferencedContainer = "container:Crius.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "reactnative-tvOS.app"
-            BlueprintName = "reactnative-tvOS"
-            ReferencedContainer = "container:reactnative.xcodeproj">
+            BuildableName = "Crius-tvOS.app"
+            BlueprintName = "Crius-tvOS"
+            ReferencedContainer = "container:Crius.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -113,9 +113,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "reactnative-tvOS.app"
-            BlueprintName = "reactnative-tvOS"
-            ReferencedContainer = "container:reactnative.xcodeproj">
+            BuildableName = "Crius-tvOS.app"
+            BlueprintName = "Crius-tvOS"
+            ReferencedContainer = "container:Crius.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
