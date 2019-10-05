@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Alert} from 'react-native';
 import {connect} from 'react-redux';
 
 import HomeHeader from '../components/HomeHeader';
@@ -14,7 +14,7 @@ class Home extends PureComponent {
   render() {
     const {signOut} = this.props;
     return (
-      <View>
+      <View style={{flex: 1, backgroundColor: 'black'}}>
         <HomeHeader onSignOut={signOut} />
       </View>
     );
@@ -23,7 +23,19 @@ class Home extends PureComponent {
 const mapStateToProps = state => ({});
 const mapDispatchToProps = dispatch => ({
   signOut: () => {
-    dispatch(setIsLogged(false));
+    Alert.alert(
+      'Signing out',
+      'Dou you really wanna sign out?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => dispatch(setIsLogged(false))},
+      ],
+      {cancelable: false},
+    );
   },
 });
 export default connect(
