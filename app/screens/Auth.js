@@ -1,14 +1,86 @@
 import React, {PureComponent} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+  Easing,
+} from 'react-native';
 import FormInput from '../components/FormInput';
 import {Image, Icon, Button} from 'react-native-elements';
+import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
 
 export default class Auth extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isLogin: true,
+      logoWidth: new Animated.Value(325),
+      logoHeight: new Animated.Value(270),
+      imageFlex: new Animated.Value(4),
+    };
   }
-
+  minimizeLogo = () => {
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(this.state.logoHeight, {
+          toValue: 100,
+          easing: Easing.back(),
+          duration: 600,
+        }),
+        Animated.timing(this.state.logoWidth, {
+          toValue: 120,
+          easing: Easing.back(),
+          duration: 600,
+        }),
+        Animated.timing(this.state.imageFlex, {
+          toValue: 1,
+          easing: Easing.back(),
+          duration: 600,
+        }),
+      ]),
+    ]).start();
+  };
+  maximizeLogo = () => {
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(this.state.logoHeight, {
+          toValue: 270,
+          easing: Easing.back(),
+          duration: 600,
+        }),
+        Animated.timing(this.state.logoWidth, {
+          toValue: 325,
+          easing: Easing.back(),
+          duration: 600,
+        }),
+        Animated.timing(this.state.imageFlex, {
+          toValue: 4,
+          easing: Easing.linear(),
+          duration: 400,
+        }),
+      ]),
+    ]).start();
+  };
+  renderForm = () => {
+    const {isLogin} = this.state;
+    if (isLogin) {
+      return <LoginForm />;
+    }
+    return <RegisterForm />;
+  };
+  onLoginFormPress = () => {
+    if (!this.state.isLogin) {
+      this.maximizeLogo();
+    }
+    this.setState({isLogin: true});
+  };
+  onRegisterFormPress = () => {
+    this.setState({isLogin: false});
+    this.minimizeLogo();
+  };
   render() {
     return (
       <View
@@ -18,15 +90,24 @@ export default class Auth extends PureComponent {
           alignItems: 'center',
           backgroundColor: 'black',
         }}>
-        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-          <Image
+        <Animated.View
+          style={{
+            justifyContent: 'center',
+            flex: this.state.imageFlex,
+            padding: 5,
+          }}>
+          <Animated.Image
             source={require('../img/logo.png')}
-            style={{width: 360, height: 300, alignSelf: 'flex-start'}}
+            style={{
+              width: this.state.logoWidth,
+              height: this.state.logoHeight,
+              alignSelf: 'flex-start',
+            }}
           />
-        </View>
+        </Animated.View>
         <View
           style={{
-            flex: 1,
+            flex: 4,
             width: '100%',
             justifyContent: 'center',
             alignItems: 'center',
@@ -37,53 +118,30 @@ export default class Auth extends PureComponent {
 
               flexDirection: 'row',
             }}>
-            <Text
-              style={{
-                flex: 1,
-                padding: 5,
-                backgroundColor: '#e91e63',
-                textAlign: 'center',
-                color: 'white',
-              }}>
-              Login
-            </Text>
-            <Text
-              style={{
-                flex: 1,
-                borderTopColor: '#17086e',
-                borderTopWidth: 5,
-                padding: 5,
-                borderTopRightRadius: 5,
-                backgroundColor: '#17086e',
-                color: 'white',
-                textAlign: 'center',
-              }}>
-              Registrar
-            </Text>
+            <TouchableOpacity
+              style={{flex: 1, padding: 5, backgroundColor: '#e91e63'}}
+              onPress={this.onLoginFormPress}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: 'white',
+                }}>
+                Login
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{flex: 1, padding: 5, backgroundColor: '#17086e'}}
+              onPress={this.onRegisterFormPress}>
+              <Text
+                style={{
+                  color: 'white',
+                  textAlign: 'center',
+                }}>
+                Register
+              </Text>
+            </TouchableOpacity>
           </View>
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '80%',
-              padding: 10,
-              paddingBottom: 15,
-              borderRadius: 5,
-              marginBottom: 2,
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
-            }}>
-            <FormInput
-              label={'Email'}
-              placeholder={'youremail@email.com'}
-              Icon={() => <Icon name="email" size={24} color="black" />}
-            />
-            <FormInput
-              label={'Password'}
-              placeholder={'*******'}
-              secure
-              Icon={() => <Icon name="lock" size={24} color="black" />}
-            />
-          </View>
+          {this.renderForm()}
           <Button title={'Login'} />
         </View>
       </View>

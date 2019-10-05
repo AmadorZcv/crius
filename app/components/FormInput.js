@@ -16,6 +16,7 @@ export default class FormInput extends PureComponent {
         label={label}
         secureTextEntry={secure}
         leftIcon={Icon}
+        {...this.props}
       />
     );
   }
