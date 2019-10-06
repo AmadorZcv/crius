@@ -1,4 +1,5 @@
 import {Presence} from 'phoenix';
+import api from '../../config/api';
 export const SET_ONLINE = 'SET_ONLINE';
 export const setOnline = users => ({
   type: SET_ONLINE,
@@ -34,4 +35,17 @@ export function listOnline() {
     });
   };
 }
-export function talkTo(id) {}
+export function talkTo(nickname) {
+  return function get(dispatch, getState) {
+    const {socket} = getState().channels;
+    api.get('/api/talk_to/Pedro').then(response => {
+      let privateChannel = socket.channel(response.data.room);
+      privateChannel.on('message', payload =>
+        console.log('Mensagem no app', payload),
+      );
+      privateChannel.join();
+      privateChannel.push('message', {message: 'Amador enviando'});
+      console.log('Response foi', response.data);
+    });
+  };
+}

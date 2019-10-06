@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 
 import HomeHeader from '../components/HomeHeader';
 import {setIsLogged} from '../redux/user/actions';
-import {listOnline} from '../redux/chat/actions';
+import {listOnline, talkTo} from '../redux/chat/actions';
 import ChatItem from '../components/ChatItem';
 import {Divider} from 'react-native-elements';
 
@@ -18,13 +18,18 @@ class Home extends PureComponent {
     listOnline();
   }
   render() {
-    const {signOut, online} = this.props;
+    const {signOut, online, talkTo} = this.props;
     return (
       <View style={{flex: 1, backgroundColor: 'black'}}>
         <HomeHeader onSignOut={signOut} />
         <FlatList
           data={Object.keys(online)}
-          renderItem={({item}) => <ChatItem nickname={online[item].id} />}
+          renderItem={({item}) => (
+            <ChatItem
+              nickname={online[item].id}
+              onPress={() => talkTo(online[item].id)}
+            />
+          )}
           ItemSeparatorComponent={Divider}
           keyExtractor={(item, index) => index.toString()}
         />
@@ -53,6 +58,9 @@ const mapDispatchToProps = dispatch => ({
   },
   listOnline: () => {
     dispatch(listOnline());
+  },
+  talkTo: nickname => {
+    dispatch(talkTo(nickname));
   },
 });
 export default connect(

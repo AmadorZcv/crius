@@ -25,7 +25,7 @@ export default class App extends Component {
     try {
       const token = await AsyncStorage.getItem('token');
       if (token !== null) {
-        api.defaults.headers.common.Authorization = token;
+        api.defaults.headers.common['Authorization'] = token;
         store.dispatch(setIsLogged(true));
         store.dispatch(setupSignIn(token));
       }
