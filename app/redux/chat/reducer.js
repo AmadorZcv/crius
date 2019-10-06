@@ -1,7 +1,7 @@
 import {SET_ONLINE} from './actions';
 
 const initialState = {
-  online: [],
+  online: {},
 };
 
 export default (state = initialState, action) => {

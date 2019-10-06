@@ -23,8 +23,8 @@ class Home extends PureComponent {
       <View style={{flex: 1, backgroundColor: 'black'}}>
         <HomeHeader onSignOut={signOut} />
         <FlatList
-          data={online}
-          renderItem={({item}) => <ChatItem nickname={item} />}
+          data={Object.keys(online)}
+          renderItem={({item}) => <ChatItem nickname={online[item].id} />}
           ItemSeparatorComponent={Divider}
           keyExtractor={(item, index) => index.toString()}
         />
