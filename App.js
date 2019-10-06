@@ -8,6 +8,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {setIsLogged} from './app/redux/user/actions';
 import api from './app/config/api';
 import {StatusBar} from 'react-native';
+import {connectToLobby} from './app/channels/lobby';
+import {setupSignIn} from './app/redux/channels/actions';
 
 export default class App extends Component {
   constructor(props) {
@@ -25,6 +27,7 @@ export default class App extends Component {
       if (token !== null) {
         api.defaults.headers.common.Authorization = token;
         store.dispatch(setIsLogged(true));
+        store.dispatch(setupSignIn(token));
       }
       this.setState({loading: false});
     } catch (error) {

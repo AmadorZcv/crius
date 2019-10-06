@@ -79,6 +79,7 @@ class Auth extends PureComponent {
     this.setState({passwordLogin});
   };
   setErrorsLogin = error => {
+    console.log('error ŕ', error);
     if (error.response) {
       if (error.response.status === 401) {
         const {data} = error.response;
