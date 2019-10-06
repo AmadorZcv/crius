@@ -10,6 +10,5 @@ export function createSocket(token) {
       params: {token, user_id: 'asd'},
     });
   }
-
   return socket;
 }
