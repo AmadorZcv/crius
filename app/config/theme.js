@@ -36,4 +36,9 @@ export const theme = {
       backgroundColor: '#e91e63',
     },
   },
+  Divider: {
+    style: {
+      backgroundColor: 'lightgray',
+    },
+  },
 };

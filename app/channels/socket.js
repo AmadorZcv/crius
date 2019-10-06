@@ -7,7 +7,7 @@ let socket = null;
 export function createSocket(token) {
   if (socket === null) {
     socket = new Socket(`${hostUrl}/socket`, {
-      params: {token, user_id: 'asd'},
+      params: {token, user_id: 'Amador'},
     });
   }
   return socket;

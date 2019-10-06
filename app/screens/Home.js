@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 import HomeHeader from '../components/HomeHeader';
 import {setIsLogged} from '../redux/user/actions';
 import {listOnline} from '../redux/chat/actions';
+import ChatItem from '../components/ChatItem';
+import {Divider} from 'react-native-elements';
 
 class Home extends PureComponent {
   constructor(props) {
@@ -22,7 +24,9 @@ class Home extends PureComponent {
         <HomeHeader onSignOut={signOut} />
         <FlatList
           data={online}
-          renderItem={({item}) => <Text style={{color: 'white'}}>{item}</Text>}
+          renderItem={({item}) => <ChatItem nickname={item} />}
+          ItemSeparatorComponent={Divider}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
     );
