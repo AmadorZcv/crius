@@ -18,18 +18,23 @@ class Home extends PureComponent {
     listOnline();
   }
   render() {
-    const {signOut, online, talkTo} = this.props;
+    const {signOut, online, talkTo, nickname} = this.props;
     return (
       <View style={{flex: 1, backgroundColor: 'black'}}>
         <HomeHeader onSignOut={signOut} />
         <FlatList
           data={Object.keys(online)}
-          renderItem={({item}) => (
-            <ChatItem
-              nickname={online[item].id}
-              onPress={() => talkTo(online[item].id)}
-            />
-          )}
+          renderItem={({item}) => {
+            if (online[item].id === nickname) {
+              return null;
+            }
+            return (
+              <ChatItem
+                nickname={online[item].id}
+                onPress={() => talkTo(online[item].id)}
+              />
+            );
+          }}
           ItemSeparatorComponent={Divider}
           keyExtractor={(item, index) => index.toString()}
         />
@@ -39,6 +44,7 @@ class Home extends PureComponent {
 }
 const mapStateToProps = state => ({
   online: state.chat.online,
+  nickname: state.user.nickname,
 });
 const mapDispatchToProps = dispatch => ({
   signOut: () => {

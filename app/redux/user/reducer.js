@@ -1,4 +1,4 @@
-import {SET_IS_LOGGED, SET_IS_FETCHING} from './actions';
+import {SET_IS_LOGGED, SET_IS_FETCHING, SET_NICKNAME} from './actions';
 
 const initialState = {
   isLogged: false,
@@ -13,6 +13,8 @@ export default (state = initialState, action) => {
 
     case SET_IS_FETCHING:
       return {...state, isFetching: action.payload};
+    case SET_NICKNAME:
+      return {...state, nickname: action.payload};
     default:
       return state;
   }

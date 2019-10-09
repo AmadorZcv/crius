@@ -5,7 +5,7 @@ import {ThemeProvider, Text} from 'react-native-elements';
 import {theme} from './app/config/theme';
 import Router from './app/config/Router';
 import AsyncStorage from '@react-native-community/async-storage';
-import {setIsLogged} from './app/redux/user/actions';
+import {setIsLogged, setNickname} from './app/redux/user/actions';
 import api from './app/config/api';
 import {StatusBar} from 'react-native';
 import {connectToLobby} from './app/channels/lobby';
@@ -26,8 +26,10 @@ export default class App extends Component {
       const token = await AsyncStorage.getItem('token');
       if (token !== null) {
         api.defaults.headers.common['Authorization'] = token;
+        const nickname = await AsyncStorage.getItem('nickname');
         store.dispatch(setIsLogged(true));
         store.dispatch(setupSignIn(token));
+        store.dispatch(setNickname(nickname));
       }
       this.setState({loading: false});
     } catch (error) {

@@ -18,7 +18,9 @@ export const setNickname = nickname => ({
 
 export function signIn(token, nickname) {
   return function fetching(dispatch) {
+    console.log('nickname', nickname);
     AsyncStorage.setItem('token', token);
+    AsyncStorage.setItem('nickname', nickname);
     dispatch(setupSignIn(token));
     dispatch(setIsLogged(true));
     dispatch(setNickname(nickname));

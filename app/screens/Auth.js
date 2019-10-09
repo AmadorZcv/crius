@@ -185,8 +185,8 @@ class Auth extends PureComponent {
 }
 
 const mapDispatchToProps = dispatch => ({
-  signIn: token => {
-    dispatch(signIn(token));
+  signIn: (token, nickname) => {
+    dispatch(signIn(token, nickname));
   },
 });
 export default connect(
