@@ -1,10 +1,46 @@
 import {Presence} from 'phoenix';
 import api from '../../config/api';
+import {
+  generate_private_key,
+  keyGen,
+  decryptMessage,
+} from '../../config/crypto';
 export const SET_ONLINE = 'SET_ONLINE';
 export const setOnline = users => ({
   type: SET_ONLINE,
   payload: users,
 });
+export const SET_CHANNEL = 'SET_CHANNEL';
+export const setChannel = channel => ({
+  type: SET_CHANNEL,
+  payload: channel,
+});
+export const SET_PUBLIC_KEY = 'SET_PUBLIC_KEY';
+export const setPublicKey = (userId, key) => ({
+  type: SET_PUBLIC_KEY,
+  payload: {userId, key},
+});
+export const SET_PRIVATE_KEY = 'SET_PRIVATE_KEY';
+export const setPrivateKey = (userId, key) => ({
+  type: SET_PRIVATE_KEY,
+  payload: {userId, key},
+});
+export const SET_SHARED_KEY = 'SET_SHARED_KEY';
+export const setSharedKey = (userId, key) => ({
+  type: SET_SHARED_KEY,
+  payload: {userId, key},
+});
+export const SET_SECRET_KEY = 'SET_SECRET_KEY';
+export const setSecretKey = (userId, key) => ({
+  type: SET_SECRET_KEY,
+  payload: {userId, key},
+});
+export const SET_READY = 'SET_READY';
+export const setReady = (userId, bool) => ({
+  type: SET_READY,
+  payload: {userId, bool},
+});
+
 function subscribeToPresence(channel, callback) {
   let presence = new Presence(channel);
   presence.onSync(() => callback(presence));
@@ -16,9 +52,11 @@ function buildUser(id, online) {
     return {
       id: id,
       channel: null,
-      privateKey: null,
+      sharedKey: null,
       publicKey: null,
-      newMessage: false,
+      secretKey: null,
+      privateKey: null,
+      ready: false,
     };
   }
 }
@@ -35,16 +73,62 @@ export function listOnline() {
     });
   };
 }
+function onStart(payload, channel, nickname, privateKey, publicKey) {
+  return function fetching(dispatch) {
+    const {sharedKey} = payload;
+    const secretKey = keyGen(sharedKey, privateKey);
+    const mySharedKey = keyGen(publicKey, privateKey);
+    dispatch(setSharedKey(nickname, sharedKey));
+    dispatch(setSecretKey(nickname, secretKey));
+    dispatch(setReady(nickname, true));
+    console.log('mySHared', mySharedKey);
+    channel.push('share_key', {sharedKey: mySharedKey});
+  };
+}
+function onShareKey(payload, nickname, privateKey) {
+  return function fetching(dispatch) {
+    const {sharedKey} = payload;
+    const secretKey = keyGen(sharedKey, privateKey);
+    dispatch(setSharedKey(nickname, sharedKey));
+    dispatch(setSecretKey(nickname, secretKey));
+    dispatch(setReady(nickname, true));
+  };
+}
+function onMessage(payload, nickname) {
+  return function fetching(dispatch, getState) {
+    const {secretKey} = getState().chat.online[nickname];
+    const {message} = payload;
+    console.log('Mensagem nova:', decryptMessage(message, secretKey));
+  };
+}
+
 export function talkTo(nickname) {
   return function get(dispatch, getState) {
     const {socket} = getState().channels;
-    api.get('/api/talk_to/Pedro').then(response => {
-      let privateChannel = socket.channel(response.data.room);
+    api.get('/api/talk_to/' + nickname).then(response => {
+      console.log('Response é', response.data);
+      const {public_key, room} = response.data;
+
+      const privateKey = generate_private_key();
+      let privateChannel = socket.channel(room);
+      dispatch(setChannel(privateChannel));
+      dispatch(setPublicKey(nickname, public_key));
+      dispatch(setPrivateKey(nickname, privateKey));
+      privateChannel.on('share_key', payload =>
+        dispatch(onShareKey(payload, nickname, privateKey)),
+      );
+      privateChannel.on('start', payload =>
+        dispatch(
+          onStart(payload, privateChannel, nickname, privateKey, public_key),
+        ),
+      );
       privateChannel.on('message', payload =>
-        console.log('Mensagem no app', payload),
+        dispatch(onMessage(payload, nickname)),
       );
       privateChannel.join();
-      privateChannel.push('message', {message: 'Amador enviando'});
+
+      privateChannel.push('start', {sharedKey: keyGen(public_key, privateKey)});
+
       console.log('Response foi', response.data);
     });
   };
