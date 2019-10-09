@@ -21,7 +21,7 @@ export function signIn(token, nickname) {
     console.log('nickname', nickname);
     AsyncStorage.setItem('token', token);
     AsyncStorage.setItem('nickname', nickname);
-    dispatch(setupSignIn(token));
+    dispatch(setupSignIn(token, nickname));
     dispatch(setIsLogged(true));
     dispatch(setNickname(nickname));
   };

@@ -29,12 +29,12 @@ function createUserChannel(socket, id) {
   return userChannel;
 }
 
-export function setupSignIn(token) {
+export function setupSignIn(token, nickname) {
   return function fetching(dispatch) {
-    const socket = createSocket(token);
+    const socket = createSocket(token, nickname);
     socket.connect();
     dispatch(setSocket(socket));
     dispatch(setLobby(createLobbyChannel(socket)));
-    dispatch(setUserChannel(createUserChannel(socket, 'asddd')));
+    dispatch(setUserChannel(createUserChannel(socket, nickname)));
   };
 }

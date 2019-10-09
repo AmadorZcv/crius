@@ -25,6 +25,7 @@ class Home extends PureComponent {
         <FlatList
           data={Object.keys(online)}
           renderItem={({item}) => {
+            console.log('Item é', online[item]);
             if (online[item].id === nickname) {
               return null;
             }
