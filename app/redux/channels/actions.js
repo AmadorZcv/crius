@@ -1,4 +1,5 @@
 import {createSocket} from '../../channels/socket';
+import {onOpenConvo} from '../chat/actions';
 
 export const SET_SOCKET = 'channels/SET_SOCKET';
 export const setSocket = socket => ({
@@ -22,11 +23,13 @@ function createLobbyChannel(socket) {
 
   return channel;
 }
-function createUserChannel(socket, id) {
-  const userChannel = socket.channel('user:' + id, {});
-  userChannel.join();
-
-  return userChannel;
+export function createUserChannel(socket, id) {
+  return function fetching(dispatch) {
+    const userChannel = socket.channel('user:' + id, {});
+    userChannel.on('open_convo', payload => dispatch(onOpenConvo(payload)));
+    userChannel.join();
+    dispatch(setUserChannel(userChannel));
+  };
 }
 
 export function setupSignIn(token, nickname) {
@@ -35,6 +38,6 @@ export function setupSignIn(token, nickname) {
     socket.connect();
     dispatch(setSocket(socket));
     dispatch(setLobby(createLobbyChannel(socket)));
-    dispatch(setUserChannel(createUserChannel(socket, nickname)));
+    dispatch(createUserChannel(socket, nickname));
   };
 }

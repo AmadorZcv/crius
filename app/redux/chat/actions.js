@@ -60,6 +60,37 @@ function buildUser(id, online) {
     };
   }
 }
+function setupPrivChannel(publicKey, room, nickname, socket) {
+  return function fetching(dispatch) {
+    const privateKey = generate_private_key();
+    let privateChannel = socket.channel(room);
+    dispatch(setChannel(privateChannel));
+    dispatch(setPublicKey(nickname, publicKey));
+    dispatch(setPrivateKey(nickname, privateKey));
+    privateChannel.on('share_key', payload =>
+      dispatch(onShareKey(payload, nickname, privateKey)),
+    );
+    privateChannel.on('start', payload =>
+      dispatch(
+        onStart(payload, privateChannel, nickname, privateKey, publicKey),
+      ),
+    );
+    privateChannel.on('message', payload =>
+      dispatch(onMessage(payload, nickname)),
+    );
+    privateChannel.join();
+
+    privateChannel.push('start', {sharedKey: keyGen(publicKey, privateKey)});
+  };
+}
+
+export function onOpenConvo(payload) {
+  return function fetching(dispatch, getState) {
+    const {socket} = getState().channels;
+    const {room, public_key, nickname} = payload;
+    dispatch(setupPrivChannel(public_key, room, nickname, socket));
+  };
+}
 export function listOnline() {
   return function fetching(dispatch, getState) {
     const {lobby} = getState().channels;
@@ -81,7 +112,6 @@ function onStart(payload, channel, nickname, privateKey, publicKey) {
     dispatch(setSharedKey(nickname, sharedKey));
     dispatch(setSecretKey(nickname, secretKey));
     dispatch(setReady(nickname, true));
-    console.log('mySHared', mySharedKey);
     channel.push('share_key', {sharedKey: mySharedKey});
   };
 }
@@ -102,34 +132,22 @@ function onMessage(payload, nickname) {
   };
 }
 
+export function sendMessage(nickname, message) {
+  return function fetching(dispatch, getState) {
+    const {channel, ready} = getState().chat.online[nickname];
+    if (ready) {
+      channel.push('message', {message});
+    }
+  };
+}
+
 export function talkTo(nickname) {
   return function get(dispatch, getState) {
     const {socket} = getState().channels;
     api.get('/api/talk_to/' + nickname).then(response => {
       console.log('Response é', response.data);
       const {public_key, room} = response.data;
-
-      const privateKey = generate_private_key();
-      let privateChannel = socket.channel(room);
-      dispatch(setChannel(privateChannel));
-      dispatch(setPublicKey(nickname, public_key));
-      dispatch(setPrivateKey(nickname, privateKey));
-      privateChannel.on('share_key', payload =>
-        dispatch(onShareKey(payload, nickname, privateKey)),
-      );
-      privateChannel.on('start', payload =>
-        dispatch(
-          onStart(payload, privateChannel, nickname, privateKey, public_key),
-        ),
-      );
-      privateChannel.on('message', payload =>
-        dispatch(onMessage(payload, nickname)),
-      );
-      privateChannel.join();
-
-      privateChannel.push('start', {sharedKey: keyGen(public_key, privateKey)});
-
-      console.log('Response foi', response.data);
+      dispatch(setupPrivChannel(public_key, room, nickname, socket));
     });
   };
 }
