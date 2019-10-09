@@ -16,29 +16,29 @@ export const setChannel = channel => ({
   payload: channel,
 });
 export const SET_PUBLIC_KEY = 'SET_PUBLIC_KEY';
-export const setPublicKey = (userId, key) => ({
+export const setPublicKey = (userId, value) => ({
   type: SET_PUBLIC_KEY,
-  payload: {userId, key},
+  payload: {userId, value},
 });
 export const SET_PRIVATE_KEY = 'SET_PRIVATE_KEY';
-export const setPrivateKey = (userId, key) => ({
+export const setPrivateKey = (userId, value) => ({
   type: SET_PRIVATE_KEY,
-  payload: {userId, key},
+  payload: {userId, value},
 });
 export const SET_SHARED_KEY = 'SET_SHARED_KEY';
-export const setSharedKey = (userId, key) => ({
+export const setSharedKey = (userId, value) => ({
   type: SET_SHARED_KEY,
-  payload: {userId, key},
+  payload: {userId, value},
 });
 export const SET_SECRET_KEY = 'SET_SECRET_KEY';
-export const setSecretKey = (userId, key) => ({
+export const setSecretKey = (userId, value) => ({
   type: SET_SECRET_KEY,
-  payload: {userId, key},
+  payload: {userId, value},
 });
 export const SET_READY = 'SET_READY';
-export const setReady = (userId, bool) => ({
+export const setReady = (userId, value) => ({
   type: SET_READY,
-  payload: {userId, bool},
+  payload: {userId, value},
 });
 
 function subscribeToPresence(channel, callback) {

@@ -11,10 +11,16 @@ export const setIsFetching = bool => ({
   payload: bool,
 });
 export const SET_NICKNAME = 'user/SET_NICKNAME';
-export function signIn(token) {
+export const setNickname = nickname => ({
+  type: SET_NICKNAME,
+  payload: nickname,
+});
+
+export function signIn(token, nickname) {
   return function fetching(dispatch) {
     AsyncStorage.setItem('token', token);
     dispatch(setupSignIn(token));
     dispatch(setIsLogged(true));
+    dispatch(setNickname(nickname));
   };
 }

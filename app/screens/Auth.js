@@ -135,7 +135,7 @@ class Auth extends PureComponent {
         email: emailLogin,
         password: passwordLogin,
       })
-      .then(response => signIn(response.data.token))
+      .then(response => signIn(response.data.token, response.data.nickname))
       .catch(error => this.setErrorsLogin(error));
   };
   buttonTitleText() {
