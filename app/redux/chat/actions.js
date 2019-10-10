@@ -4,16 +4,18 @@ import {
   generate_private_key,
   keyGen,
   decryptMessage,
+  encryptMessage,
 } from '../../config/crypto';
+import {Alert} from 'react-native';
 export const SET_ONLINE = 'SET_ONLINE';
 export const setOnline = users => ({
   type: SET_ONLINE,
   payload: users,
 });
 export const SET_CHANNEL = 'SET_CHANNEL';
-export const setChannel = channel => ({
+export const setChannel = (userId, value) => ({
   type: SET_CHANNEL,
-  payload: channel,
+  payload: {userId, value},
 });
 export const SET_PUBLIC_KEY = 'SET_PUBLIC_KEY';
 export const setPublicKey = (userId, value) => ({
@@ -64,7 +66,9 @@ function setupPrivChannel(publicKey, room, nickname, socket) {
   return function fetching(dispatch) {
     const privateKey = generate_private_key();
     let privateChannel = socket.channel(room);
-    dispatch(setChannel(privateChannel));
+
+    dispatch(setChannel(nickname, privateChannel));
+
     dispatch(setPublicKey(nickname, publicKey));
     dispatch(setPrivateKey(nickname, privateKey));
     privateChannel.on('share_key', payload =>
@@ -79,7 +83,6 @@ function setupPrivChannel(publicKey, room, nickname, socket) {
       dispatch(onMessage(payload, nickname)),
     );
     privateChannel.join();
-
     privateChannel.push('start', {sharedKey: keyGen(publicKey, privateKey)});
   };
 }
@@ -105,6 +108,7 @@ export function listOnline() {
   };
 }
 function onStart(payload, channel, nickname, privateKey, publicKey) {
+  console.log('On Start');
   return function fetching(dispatch) {
     const {sharedKey} = payload;
     const secretKey = keyGen(sharedKey, privateKey);
@@ -116,6 +120,7 @@ function onStart(payload, channel, nickname, privateKey, publicKey) {
   };
 }
 function onShareKey(payload, nickname, privateKey) {
+  console.log('On Share');
   return function fetching(dispatch) {
     const {sharedKey} = payload;
     const secretKey = keyGen(sharedKey, privateKey);
@@ -125,18 +130,27 @@ function onShareKey(payload, nickname, privateKey) {
   };
 }
 function onMessage(payload, nickname) {
+  console.log('On Message', payload);
   return function fetching(dispatch, getState) {
     const {secretKey} = getState().chat.online[nickname];
+    console.log('Payload é', payload);
     const {message} = payload;
-    console.log('Mensagem nova:', decryptMessage(message, secretKey));
+    Alert.alert('Mensagem nova', decryptMessage(message, secretKey.toString()));
+    console.log(
+      'Mensagem nova:',
+      decryptMessage(message, secretKey.toString()),
+    );
   };
 }
 
 export function sendMessage(nickname, message) {
   return function fetching(dispatch, getState) {
-    const {channel, ready} = getState().chat.online[nickname];
+    console.log('Aqui??????;;');
+    const {channel, ready, secretKey} = getState().chat.online[nickname];
+    const encryptedMessage = encryptMessage(message, secretKey.toString());
+    console.log('Encrypted é', encryptedMessage);
     if (ready) {
-      channel.push('message', {message});
+      channel.push('message', {message: encryptedMessage});
     }
   };
 }
@@ -144,10 +158,13 @@ export function sendMessage(nickname, message) {
 export function talkTo(nickname) {
   return function get(dispatch, getState) {
     const {socket} = getState().channels;
-    api.get('/api/talk_to/' + nickname).then(response => {
-      console.log('Response é', response.data);
-      const {public_key, room} = response.data;
-      dispatch(setupPrivChannel(public_key, room, nickname, socket));
-    });
+    api
+      .get('/api/talk_to/' + nickname)
+      .then(response => {
+        console.log('Response é', response.data);
+        const {public_key, room} = response.data;
+        dispatch(setupPrivChannel(public_key, room, nickname, socket));
+      })
+      .catch(error => error);
   };
 }

@@ -13,6 +13,7 @@ export function keyGen(base, key) {
   return Math.pow(base, key) % n;
 }
 export function encryptMessage(message, key) {
+  console.log('Qeubra aqui?', message, key);
   return CryptoJS.AES.encrypt(message, key).toString();
 }
 

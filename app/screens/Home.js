@@ -4,7 +4,11 @@ import {connect} from 'react-redux';
 
 import HomeHeader from '../components/HomeHeader';
 import {setIsLogged} from '../redux/user/actions';
-import {listOnline, talkTo} from '../redux/chat/actions';
+import {
+  listOnline,
+  talkTo as talkToRedux,
+  sendMessage as sendMessageRedux,
+} from '../redux/chat/actions';
 import ChatItem from '../components/ChatItem';
 import {Divider} from 'react-native-elements';
 
@@ -17,6 +21,16 @@ class Home extends PureComponent {
     const {listOnline} = this.props;
     listOnline();
   }
+  onChatPress = item => {
+    const {talkTo, sendMessage} = this.props;
+    console.log('item é', item);
+    if (item.ready) {
+      console.log('AQui???');
+      sendMessage(item.id, 'Teste');
+    } else {
+      talkTo(item.id);
+    }
+  };
   render() {
     const {signOut, online, talkTo, nickname} = this.props;
     return (
@@ -25,14 +39,13 @@ class Home extends PureComponent {
         <FlatList
           data={Object.keys(online)}
           renderItem={({item}) => {
-            console.log('Item é', online[item]);
             if (online[item].id === nickname) {
               return null;
             }
             return (
               <ChatItem
                 nickname={online[item].id}
-                onPress={() => talkTo(online[item].id)}
+                onPress={() => this.onChatPress(online[item])}
               />
             );
           }}
@@ -67,7 +80,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(listOnline());
   },
   talkTo: nickname => {
-    dispatch(talkTo(nickname));
+    dispatch(talkToRedux(nickname));
+  },
+  sendMessage: (nickname, message) => {
+    dispatch(sendMessageRedux(nickname, message));
   },
 });
 export default connect(
