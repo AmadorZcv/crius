@@ -22,13 +22,14 @@ export default class RegisterForm extends PureComponent {
         <FormInput
           label={'Nickname'}
           placeholder={'nickname'}
-          Icon={() => <Icon name="lock" size={24} color="black" />}
+          Icon={() => <Icon name="user" type="font-awesome" size={24} color="black" />}
           labelStyle={styles.labelStyle}
         />
         <FormInput
           label={'Password'}
-          placeholder={'youremail@email.com'}
-          Icon={() => <Icon name="email" size={24} color="black" />}
+          secure
+          placeholder={'*******'}
+          Icon={() => <Icon name="lock" size={24} color="black" />}
           labelStyle={styles.labelStyle}
         />
       </View>

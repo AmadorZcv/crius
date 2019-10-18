@@ -1,50 +1,55 @@
-import React, {PureComponent} from 'react';
-import {View, Text, Alert, FlatList} from 'react-native';
-import {connect} from 'react-redux';
+import React, { PureComponent } from 'react';
+import { View, Text, Alert, FlatList } from 'react-native';
+import { connect } from 'react-redux';
 
 import HomeHeader from '../components/HomeHeader';
-import {setIsLogged} from '../redux/user/actions';
+import { setIsLogged } from '../redux/user/actions';
 import {
   listOnline,
   talkTo as talkToRedux,
   sendMessage as sendMessageRedux,
 } from '../redux/chat/actions';
 import ChatItem from '../components/ChatItem';
-import {Divider} from 'react-native-elements';
+import { Divider, Input } from 'react-native-elements';
 
 class Home extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      message: "",
+    };
   }
   componentDidMount() {
-    const {listOnline} = this.props;
+    const { listOnline } = this.props;
     listOnline();
   }
   onChatPress = item => {
-    const {talkTo, sendMessage} = this.props;
-    console.log('item é', item);
+    const { talkTo, sendMessage } = this.props;
+    const { message } = this.state;
+    console.log('message', message);
     if (item.ready) {
       console.log('AQui???');
-      sendMessage(item.id, 'Teste');
+      sendMessage(item.id, message);
+      this.setState({message:""})
     } else {
       talkTo(item.id);
     }
   };
   render() {
-    const {signOut, online, talkTo, nickname} = this.props;
+    const { signOut, online, talkTo, nickname } = this.props;
     return (
-      <View style={{flex: 1, backgroundColor: 'black'}}>
+      <View style={{ flex: 1, backgroundColor: 'black' }}>
         <HomeHeader onSignOut={signOut} />
         <FlatList
           data={Object.keys(online)}
-          renderItem={({item}) => {
+          renderItem={({ item }) => {
             if (online[item].id === nickname) {
               return null;
             }
             return (
               <ChatItem
                 nickname={online[item].id}
+                isChannelOpen={online[item].ready}
                 onPress={() => this.onChatPress(online[item])}
               />
             );
@@ -52,6 +57,7 @@ class Home extends PureComponent {
           ItemSeparatorComponent={Divider}
           keyExtractor={(item, index) => index.toString()}
         />
+        <Input value={this.state.message} onChangeText={(text) => this.setState({ message: text })} />
       </View>
     );
   }
@@ -68,12 +74,12 @@ const mapDispatchToProps = dispatch => ({
       [
         {
           text: 'Cancel',
-          onPress: () => {},
+          onPress: () => { },
           style: 'cancel',
         },
-        {text: 'OK', onPress: () => dispatch(setIsLogged(false))},
+        { text: 'OK', onPress: () => dispatch(setIsLogged(false)) },
       ],
-      {cancelable: false},
+      { cancelable: false },
     );
   },
   listOnline: () => {
